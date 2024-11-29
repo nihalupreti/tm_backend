@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const argon2 = require("argon2");
-const user = require("../config/database");
+const { users: user } = require("../config/database");
 const userSchema = require("../config/types");
 
 const router = express.Router();
