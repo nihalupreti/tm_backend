@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const argon2 = require("argon2");
-const { users: user } = require("../config/database");
+const { user } = require("../config/database");
 const userSchema = require("../config/types");
 
 const router = express.Router();
@@ -34,11 +34,13 @@ router.post("/signup", userExist, (req, res) => {
   const fullName = req.body["fullName"];
   const userName = req.body["userName"];
   const password = req.body["password"];
+  const email = req.body["email"];
 
   const userDetail = {
     fullName: fullName,
     userName: userName,
     password: password,
+    email: email,
   };
 
   const inputValidation = userSchema.safeParse(userDetail); // Ensures that the provided user input matches the expected formate and type.
@@ -50,7 +52,8 @@ router.post("/signup", userExist, (req, res) => {
         const newUser = new user({
           fullName,
           userName,
-          password: hashedPassword, // Save the hashed passworde
+          password: hashedPassword,
+          email, // Save the hashed passworde
         });
 
         newUser

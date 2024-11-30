@@ -18,7 +18,7 @@ router.post("/todo", authMiddleware, (req, res) => {
     .save()
     .then((data) => {
       console.log("sucessfully saved the todo.");
-      res.status(200).json({ id: data._id });
+      res.status(200).json(data);
     })
     .catch((err) => {
       console.log("could not save the todos.");
@@ -50,7 +50,7 @@ router.delete("/todo/:id", authMiddleware, (req, res) => {
           .status(404)
           .json({ message: "Task not found or not authorized" });
       }
-      res.status(200).json({ message: "Task deleted successfully" });
+      res.status(200).json(deletedTask);
     })
     .catch((err) => {
       console.error("Error deleting task:", err);

@@ -3,6 +3,7 @@ const zod = require("zod");
 const userSchema = zod.object({
   fullName: zod.string(),
   userName: zod.string().min(3).max(30),
+  email: zod.string().email({ message: "Invalid email address" }), // Email validation
   password: zod
     .string()
     .min(8, { message: "Password must be at least 8 characters long" })

@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
-const { description, required } = require("./types");
 
 mongoose
   .connect(process.env.DB_URL)
   .then(() => {
     console.log("Connected to the database succesfully.");
   })
-  .catch(() => {
-    console.log("some error occured while trying to connect to the database.");
+  .catch((err) => {
+    console.log(
+      "some error occured while trying to connect to the database." + err
+    );
   });
 
 const userSchema = new mongoose.Schema({
@@ -19,6 +20,13 @@ const userSchema = new mongoose.Schema({
     trim: true,
     minLength: 3,
     maxLength: 30,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    match: [/.+@.+\..+/, "Please enter a valid email address"],
   },
   password: {
     type: String,
@@ -42,7 +50,7 @@ const todoScheme = new mongoose.Schema(
   { timestamps: true }
 );
 
-const users = mongoose.model("users", userSchema);
+const user = mongoose.model("User", userSchema);
 const todos = mongoose.model("todos", todoScheme);
 
-module.exports = { users, todos };
+module.exports = { user, todos };
