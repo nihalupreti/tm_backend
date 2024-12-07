@@ -83,4 +83,15 @@ router.put("/todo/:id", authMiddleware, (req, res) => {
     });
 });
 
+router.get("/todo/completed", authMiddleware, (req, res) => {
+  task
+    .find({ user: req.user.userid, status: true })
+    .then((task) => {
+      res.status(200).json(task);
+    })
+    .catch((err) => {
+      console.log("couldnot fetch completed tasks from database.");
+      res.status(400).json({ message: "try again" });
+    });
+});
 module.exports = router;
