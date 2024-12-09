@@ -1,21 +1,15 @@
-const jwt = require("jsonwebtoken");
+const ApiError = require("../utils/customError");
+const { verifyJwt } = require("../utils/jwt");
 
 // Middleware to verify the JWT token
 const verifyToken = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", ""); // remove bearer from the value
-  if (!token) {
-    return res
-      .status(403)
-      .json({ message: "Access denied. No token provided." });
+  const encryptedToken = req.cookies.authtoken;
+  if (!encryptedToken) {
+    throw new ApiError(401, "Access denied.", "Token was not provided");
   }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(400).json({ message: "Invalid token." });
-  }
+  const decodedValue = verifyJwt(encryptedToken);
+  req.user = decodedValue;
+  next();
 };
 
 module.exports = verifyToken;

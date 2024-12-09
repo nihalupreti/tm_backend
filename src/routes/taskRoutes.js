@@ -1,55 +1,18 @@
 const express = require("express");
 const authMiddleware = require("../middlewares/auth");
-const { todos: task } = require("../config/database");
-const sendSuccessResponse = require("../utils/reponse");
-const ApiError = require("../utils/customError");
+const {
+  saveTask,
+  getTask,
+  deleteTask,
+} = require("../controllers/taskController");
 
 const router = express.Router();
 
-router.post("/todo", authMiddleware, async (req, res, next) => {
-  const { title, description, dueDate, status } = req.body;
+router.use(authMiddleware);
 
-  try {
-    const todo = new task({
-      title: title,
-      description: description,
-      dueDate: dueDate,
-      status: status,
-      user: req.user.userid,
-    });
-    const saveTodo = await todo.save();
-    sendSuccessResponse(res, 200, saveTodo, "Sucessfully created the task.");
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.get("/todos", authMiddleware, async (req, res, next) => {
-  try {
-    const allUserTasks = await task.find({ user: req.user.userid });
-    sendSuccessResponse(res, 200, allUserTasks, "All tasks.");
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.delete("/todo/:id", authMiddleware, async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    const deletedTask = await task.findByIdAndDelete({
-      _id: id,
-      user: req.user.userid,
-    });
-
-    if (!deletedTask) {
-      throw new ApiError(404, "Task not found.", `No task with id ${id}`);
-    }
-
-    sendSuccessResponse(res, 200, deletedTask, "Task deleted successfully.");
-  } catch (err) {
-    next(err);
-  }
-});
+router.post("/todo", saveTask);
+router.get("/todos", getTask);
+router.delete("/todo/:id", deleteTask);
 
 // router.put("/todo/:id", authMiddleware, (req, res) => {
 //   const { title, description, dueDate, status } = req.body; //updated data
