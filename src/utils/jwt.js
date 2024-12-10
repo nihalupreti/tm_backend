@@ -7,12 +7,13 @@ const signJwt = (json) => {
     expiresIn: "1h",
   });
   const encryptedToken = encryptToken(jwtToken);
-  return encryptToken;
+  return encryptedToken;
 };
 
 const verifyJwt = (encryptedToken) => {
   try {
-    const decryptedToken = decryptToken(encryptToken);
+    const decryptedToken = decryptToken(encryptedToken);
+
     const decodedValue = jwt.verify(decryptedToken, process.env.JWT_SECRET);
     return decodedValue;
   } catch (err) {

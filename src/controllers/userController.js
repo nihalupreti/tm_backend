@@ -3,7 +3,8 @@ const argon2 = require("argon2");
 const User = require("../models/User");
 const sendSuccessResponse = require("../utils/reponse");
 const userSchema = require("../validators/userValidator");
-const signJwt = require("../utils/jwt");
+const { signJwt } = require("../utils/jwt");
+const ApiError = require("../utils/customError");
 
 const setCookie = (res, encryptedToken) => {
   res.cookie("authToken", encryptedToken, {
@@ -75,7 +76,7 @@ exports.signinUser = async (req, res, next) => {
       );
     }
 
-    const encryptedJwtToken = signJwt({ userid: savedUser._id });
+    const encryptedJwtToken = signJwt({ userid: existingUser._id });
     setCookie(res, encryptedJwtToken);
     sendSuccessResponse(res, 200, "", "User loggedin successfully.");
   } catch (err) {

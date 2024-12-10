@@ -3,7 +3,7 @@ const { verifyJwt } = require("../utils/jwt");
 
 // Middleware to verify the JWT token
 const verifyToken = (req, res, next) => {
-  const encryptedToken = req.cookies.authtoken;
+  const encryptedToken = req.cookies.authToken;
   if (!encryptedToken) {
     throw new ApiError(401, "Access denied.", "Token was not provided");
   }
