@@ -1,4 +1,4 @@
-const Task = require("../models/Todo");
+const { Task } = require("../models/Todo");
 const sendSuccessResponse = require("../utils/reponse");
 
 exports.saveTask = async (req, res, next) => {
